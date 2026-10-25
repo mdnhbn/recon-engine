@@ -16,7 +16,13 @@ document.getElementById("search-form-top").addEventListener("submit", (e) => {
   if (value) runRecon(value);
 });
 
+let scanRunning = false;
+
 async function runRecon(target) {
+  if (scanRunning) return;
+  scanRunning = true;
+  const buttons = document.querySelectorAll("#search-form button, #search-form-top button");
+  buttons.forEach(button => { button.disabled = true; });
   homeView.classList.add("hidden");
   resultsView.classList.remove("hidden");
   document.getElementById("search-input-top").value = target;
@@ -31,7 +37,20 @@ async function runRecon(target) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ target }),
     });
-    const data = await resp.json();
+    if (resp.status === 401 || (resp.redirected && new URL(resp.url).pathname === "/login")) {
+      throw new Error("লগইনের মেয়াদ শেষ হয়েছে। পেজ রিফ্রেশ করে আবার লগইন করুন।");
+    }
+    const contentType = resp.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      throw new Error("স্ক্যানের সার্ভার উত্তর দিতে পারেনি (HTTP " + resp.status + ")। পরে আবার চেষ্টা করুন।");
+    }
+    const text = await resp.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error("সার্ভারের উত্তর অসম্পূর্ণ। পরে আবার চেষ্টা করুন।");
+    }
     loading.classList.add("hidden");
 
     if (!resp.ok) {
@@ -48,6 +67,9 @@ async function runRecon(target) {
     loading.classList.add("hidden");
     errorBox.textContent = "সার্ভারের সাথে যোগাযোগ করা যায়নি: " + err.message;
     errorBox.classList.remove("hidden");
+  } finally {
+    scanRunning = false;
+    buttons.forEach(button => { button.disabled = false; });
   }
 }
 
@@ -74,7 +96,7 @@ function renderResults(data) {
     html += `
       <div class="card host-card">
         <div class="host-top">
-          <a class="host-url" href="${host.url}" target="_blank" rel="noopener">${escapeHtml(host.host)}</a>
+          <a class="host-url" href="${escapeAttribute(host.url)}" target="_blank" rel="noopener">${escapeHtml(host.host)}</a>
           <span class="status ${statusClass}">${host.status_code}</span>
         </div>
         ${host.title ? `<div class="host-title">${escapeHtml(host.title)}</div>` : ""}
@@ -122,3 +144,7 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+
+function escapeAttribute(value) {
+  return escapeHtml(String(value || "")).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}

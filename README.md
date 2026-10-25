@@ -115,3 +115,12 @@ recon-tool/
 - Blueprint deploy সম্পন্ন হওয়া এবং অ্যাপের login, admin ও scan পরীক্ষা সফল হওয়া আলাদা ধাপ।
 
 সূত্র: https://render.com/docs/free এবং https://render.com/docs/blueprint-spec
+
+## Login ও deployment troubleshooting
+
+- Username ও email দিয়ে লগইন বড়/ছোট অক্ষর নির্বিশেষে কাজ করে; পুরোনো account-এর নাম বা password বদলানোর প্রয়োজন নেই। একই নামের পুরোনো একাধিক account থাকলে আসল বানান বা email ব্যবহার করো।
+- `/healthz` deployed Git commit দেখায়। Render auto-deploy চালু থাকলে GitHub main-এর সঙ্গে সেটি মিলিয়ে নাও।
+- Login হারিয়ে গেলে Render Environment-এ স্থায়ী `SECRET_KEY` এবং PostgreSQL-এর `DATABASE_URL` ব্যবহার হচ্ছে কি না দেখো। Secret-এর value প্রকাশ বা অকারণে rotate কোরো না। Manual Web Service-এ Blueprint-এর env vars নিজে থেকে যুক্ত হয় না। SQLite ব্যবহার করলে restart/redeploy-এ account হারাতে পারে।
+- প্রথম signup-ই admin হয়; হারানো account ঠিক করতে নতুন signup করার আগে database configuration যাচাই করো।
+- `gunicorn.conf.py` threaded worker চালায়, যাতে দীর্ঘ lookup-এর কারণে default sync worker-এর ৩০ সেকেন্ড timeout না হয়। খুব বড় scan বা upstream failure এখনও ব্যর্থ হতে পারে; এখন UI-তে বোধগম্য error দেখাবে।
+- Regression tests কোনো বাইরের domain স্ক্যান করে না: `python -m unittest discover -s tests -v`।
