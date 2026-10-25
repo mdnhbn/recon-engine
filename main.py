@@ -51,11 +51,16 @@ def recon():
             }), 429
 
     data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict) or not isinstance(data.get("target", ""), str):
+        return jsonify(error="একটি domain বা HTTP/HTTPS URL দিন।"), 400
     target = (data.get("target") or "").strip()
     if not target:
         return jsonify({"error": "কোনো domain/URL দেওয়া হয়নি।"}), 400
 
-    domain = normalize_domain(target)
+    try:
+        domain = normalize_domain(target)
+    except ValueError as error:
+        return jsonify(error=str(error)), 400
     result = {"target": domain}
 
     # Stage 1: Passive Recon & OSINT

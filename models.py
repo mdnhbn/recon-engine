@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timedelta
 
 from flask_login import UserMixin
+from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
@@ -68,7 +69,7 @@ class Settings(db.Model):
     def get():
         settings = Settings.query.first()
         if not settings:
-            settings = Settings(daily_scan_limit=10)
+            settings = Settings(daily_scan_limit=current_app.config["DEFAULT_DAILY_SCAN_LIMIT"])
             db.session.add(settings)
             db.session.commit()
         return settings
