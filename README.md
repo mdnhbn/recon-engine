@@ -105,3 +105,13 @@ recon-tool/
 - রেজাল্ট PDF/CSV এক্সপোর্ট
 - প্রতি-ইউজার আলাদা rate limit override
 
+
+## Render Free plan-এর সীমা
+
+`render.yaml`-এ Web Service ও PostgreSQL দুটির জন্যই `plan: free` নির্দিষ্ট করা হয়েছে। Deploy করার আগে Render-এর সারাংশে দুটিই Free আছে কি না দেখে নাও।
+
+- Free Web Service ১৫ মিনিট নিষ্ক্রিয় থাকলে বন্ধ হয়ে যায়; পরের অনুরোধে আবার চালু হতে সময় লাগে।
+- Free PostgreSQL তৈরি হওয়ার ৩০ দিন পর মেয়াদ শেষ হয়। এরপর ১৪ দিনের grace period পেরিয়ে গেলে ডেটা মুছে যায়। এটি স্থায়ী ফ্রি production database নয়।
+- Blueprint deploy সম্পন্ন হওয়া এবং অ্যাপের login, admin ও scan পরীক্ষা সফল হওয়া আলাদা ধাপ।
+
+সূত্র: https://render.com/docs/free এবং https://render.com/docs/blueprint-spec
