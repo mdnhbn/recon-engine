@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2>সাইট সেটিংস</h2>
+<form method="POST" class="settings-form">
+
+  <fieldset>
+    <legend>API Keys (ঐচ্ছিক)</legend>
+    <label>Shodan API Key
+      <input type="text" name="shodan_api_key" value="{{ settings.shodan_api_key or '' }}" placeholder="খালি রাখলে Shodan স্কিপ হবে">
+    </label>
+    <label>Censys API ID
+      <input type="text" name="censys_api_id" value="{{ settings.censys_api_id or '' }}">
+    </label>
+    <label>Censys API Secret
+      <input type="password" name="censys_api_secret" value="{{ settings.censys_api_secret or '' }}">
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>রেট লিমিট</legend>
+    <label>প্রতিদিন (২৪ ঘণ্টায়) একজন সাধারণ ইউজার কতবার স্ক্যান করতে পারবে
+      <input type="number" name="daily_scan_limit" value="{{ settings.daily_scan_limit }}" min="1">
+    </label>
+    <p class="muted">Admin ইউজারদের জন্য কোনো লিমিট নেই।</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>বিজ্ঞাপন (AdSense বা যেকোনো ad script)</legend>
+    <label>Ad snippet (HTML/JS কোড পেস্ট করো)
+      <textarea name="ad_snippet" rows="6" placeholder="&lt;script async src=&quot;https://pagead2.googlesyndication.com/...&quot;&gt;&lt;/script&gt;">{{ settings.ad_snippet or '' }}</textarea>
+    </label>
+    <p class="muted">এটা সার্চ পেজের উপরে আর নিচে দেখানো হবে। খালি রাখলে কোনো বিজ্ঞাপন দেখাবে না।</p>
+  </fieldset>
+
+  <button type="submit">সেভ করো</button>
+</form>
+{% endblock %}
+

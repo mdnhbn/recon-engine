@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2>সব স্ক্যান হিস্ট্রি (সাম্প্রতিক ২০০টি)</h2>
+<table class="data-table">
+  <thead><tr><th>User</th><th>Target</th><th>Subdomains</th><th>Live Hosts</th><th>সময়</th></tr></thead>
+  <tbody>
+    {% for scan in scans %}
+    <tr>
+      <td>{{ scan.user.username }}</td>
+      <td>{{ scan.target }}</td>
+      <td>{{ scan.subdomain_count }}</td>
+      <td>{{ scan.live_host_count }}</td>
+      <td>{{ scan.created_at.strftime("%Y-%m-%d %H:%M UTC") }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">কোনো স্ক্যান নেই।</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+

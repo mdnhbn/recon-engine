@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-wrap">
+  <div class="admin-subnav">
+    <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('admin.users') }}">Users</a>
+    <a href="{{ url_for('admin.scans') }}">All Scans</a>
+    <a href="{{ url_for('admin.settings') }}">Settings</a>
+  </div>
+  {% block admin_content %}{% endblock %}
+</div>
+{% endblock %}
+

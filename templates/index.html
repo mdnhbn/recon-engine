@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}ReconEngine{% endblock %}
+{% block content %}
+
+{% if ad_snippet %}
+<div class="ad-slot ad-top">{{ ad_snippet | safe }}</div>
+{% endif %}
+
+<div id="home-view" class="home">
+  <h1 class="logo">Recon<span>Engine</span></h1>
+  <form id="search-form" class="search-form">
+    <input id="search-input" type="text" placeholder="একটা domain বা URL লিখো, যেমন: example.com" autofocus autocomplete="off">
+    <button type="submit">Recon</button>
+  </form>
+  <p class="hint">Passive OSINT + Subdomain Discovery + Live Check + Tech Stack — সব একসাথে</p>
+  <p class="quota">আজকে স্ক্যান করেছো: <strong>{{ scans_today }}</strong> / {{ daily_limit if daily_limit < 999999 else "আনলিমিটেড" }}</p>
+</div>
+
+<div id="results-view" class="results hidden">
+  <div class="results-header">
+    <h2 class="logo small">Recon<span>Engine</span></h2>
+    <form id="search-form-top" class="search-form-top">
+      <input id="search-input-top" type="text" autocomplete="off">
+      <button type="submit">Recon</button>
+    </form>
+  </div>
+
+  <div id="loading" class="loading hidden">
+    <div class="spinner"></div>
+    <p id="loading-text">স্ক্যান চলছে... একটু সময় লাগতে পারে</p>
+  </div>
+
+  <div id="error-box" class="error hidden"></div>
+
+  <div id="results-content"></div>
+</div>
+
+{% if ad_snippet %}
+<div class="ad-slot ad-bottom">{{ ad_snippet | safe }}</div>
+{% endif %}
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}
+

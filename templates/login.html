@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Login — ReconEngine{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1 class="logo small center">Recon<span>Engine</span></h1>
+    <h2 class="auth-title">লগইন করো</h2>
+    <form method="POST" class="auth-form">
+      <input type="text" name="identifier" placeholder="Username অথবা Email" required autofocus>
+      <input type="password" name="password" placeholder="পাসওয়ার্ড" required>
+      <button type="submit">Login</button>
+    </form>
+    <p class="auth-switch">অ্যাকাউন্ট নেই? <a href="{{ url_for('auth.signup') }}">সাইনআপ করো</a></p>
+  </div>
+</div>
+{% endblock %}
+

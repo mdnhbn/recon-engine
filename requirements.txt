@@ -1,0 +1,9 @@
+Flask
+Flask-SQLAlchemy
+Flask-Login
+requests
+python-whois
+dnspython
+gunicorn
+psycopg2-binary
+

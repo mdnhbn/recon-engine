@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2>ইউজার ম্যানেজমেন্ট</h2>
+<table class="data-table">
+  <thead><tr><th>Username</th><th>Email</th><th>Admin?</th><th>Active?</th><th>Scans today</th><th>Join date</th><th>Action</th></tr></thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td>{{ u.username }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ "হ্যাঁ" if u.is_admin else "না" }}</td>
+      <td>{{ "হ্যাঁ" if u.is_active_user else "ব্লকড" }}</td>
+      <td>{{ u.scans_today_count() }}</td>
+      <td>{{ u.created_at.strftime("%Y-%m-%d") }}</td>
+      <td class="action-cell">
+        {% if u.id != current_user.id %}
+        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=u.id) }}">
+          <button type="submit" class="btn-small">{{ "Remove admin" if u.is_admin else "Make admin" }}</button>
+        </form>
+        <form method="POST" action="{{ url_for('admin.toggle_active', user_id=u.id) }}">
+          <button type="submit" class="btn-small btn-danger">{{ "Unblock" if not u.is_active_user else "Block" }}</button>
+        </form>
+        {% else %}
+        <span class="muted">(তুমি)</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+

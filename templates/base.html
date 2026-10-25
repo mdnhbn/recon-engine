@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}ReconEngine{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+{% if current_user.is_authenticated %}
+<nav class="topnav">
+  <a href="{{ url_for('main.index') }}" class="nav-logo">Recon<span>Engine</span></a>
+  <div class="nav-links">
+    <a href="{{ url_for('main.index') }}">Search</a>
+    <a href="{{ url_for('main.my_scans') }}">My Scans</a>
+    {% if current_user.is_admin %}<a href="{{ url_for('admin.dashboard') }}">Admin</a>{% endif %}
+    <span class="nav-user">{{ current_user.username }}</span>
+    <a href="{{ url_for('auth.logout') }}">Logout</a>
+  </div>
+</nav>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+</body>
+</html>
+

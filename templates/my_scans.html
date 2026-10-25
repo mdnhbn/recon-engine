@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}My Scans — ReconEngine{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <h2>আমার স্ক্যান হিস্ট্রি</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>Target</th><th>Subdomains</th><th>Live Hosts</th><th>সময়</th></tr>
+    </thead>
+    <tbody>
+      {% for scan in scans %}
+      <tr>
+        <td>{{ scan.target }}</td>
+        <td>{{ scan.subdomain_count }}</td>
+        <td>{{ scan.live_host_count }}</td>
+        <td>{{ scan.created_at.strftime("%Y-%m-%d %H:%M UTC") }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4">এখনো কোনো স্ক্যান করোনি।</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
